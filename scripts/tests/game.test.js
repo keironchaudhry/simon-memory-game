@@ -1,7 +1,9 @@
+/**
+ * @jest-environment jsdom
+ */
 
-const { game, newGame, showScore } = require("../game");
+const { game, newGame, showScore, addTurn } = require("../game");
 
-/** To be written at the beginning for every HTML file that is to be loaded into the DOM  */
 beforeAll(() => {
     let fs = require("fs");
     let fileContents = fs.readFileSync("index.html", "utf-8");
@@ -23,7 +25,7 @@ describe("game object contains correct keys", () => {
     test("choices key exists", () => {
         expect("choices" in game).toBe(true);
     });
-    test("choices contains correct ids", () => {
+    test("choices contain correct ids", () => {
         expect(game.choices).toEqual(["button1", "button2", "button3", "button4"]);
     });
 });
@@ -31,21 +33,21 @@ describe("game object contains correct keys", () => {
 describe("newGame works correctly", () => {
     beforeAll(() => {
         game.score = 42;
-        game.playerMoves = [1, 2, 3];
-        game.currentGame = [1, 2, 3];
+        game.playerMoves = ["button1", "button2"];
+        game.currentGame = ["button1", "button2"];
         document.getElementById("score").innerText = "42";
         newGame();
     });
     test("should set game score to zero", () => {
         expect(game.score).toEqual(0);
     });
-    test("should clear playerMoves array", () => {
-        expect(game.playerMoves).toEqual([]);
-    });
-    test("should clear currentGame array", () => {
-        expect(game.currentGame).toEqual([]);
-    });
-    test("should display 0 for the element with an id of score", () => {
+    test("should display 0 for the element with id of score", () => {
         expect(document.getElementById("score").innerText).toEqual(0);
+    });
+    test("should clear the player moves array", () => {
+        expect(game.playerMoves.length).toBe(0);
+    });
+    test("should add one move to the computer's game array", () => {
+        expect(game.currentGame.length).toBe(1);
     });
 });
